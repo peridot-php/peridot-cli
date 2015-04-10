@@ -1,0 +1,33 @@
+{
+    "name": "peridot-php/peridot-cli",
+    "description": "The Peridot command line interface",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Brian Scaturro",
+            "email": "scaturrob@gmail.com"
+        },
+        {
+            "name": "Austin Morris",
+            "email": "austin.morris@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Peridot\\Cli\\": "src/"
+         }
+    },
+    "require": {
+      "peridot-php/peridot-core": "2.0.*@dev",
+      "peridot-php/peridot-reporters": "2.0.*@dev",
+      "symfony/console": "~2.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    },
+    "require-dev": {
+        "peridot-php/peridot": "2.0.*@dev"
+    }
+}
