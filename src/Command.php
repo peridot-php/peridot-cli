@@ -132,10 +132,10 @@ class Command extends ConsoleCommand
         }
 
         if ($reporter = $input->getOption('reporter')) {
-            //$this->configuration->setReporter($reporter);
+            
         }
 
-        $this->eventEmitter->emit('peridot.load', [$this, $this->configuration]);
+        $this->eventEmitter->emit('peridot.load', [$this]);
         $this->runner->setStopOnFailure($input->getOption('bail'));
         $reporter = $this->factory->create('spec');
         $reporter->setColorsEnabled(! $input->getOption('no-colors'));

@@ -1,4 +1,5 @@
 #!/usr/bin/env php
 <?php
 $application = include __DIR__ . '/../application.php';
+$application->loadDsl(__DIR__ . '/../vendor/peridot-php/peridot/src/Dsl.php');
 $application->run();

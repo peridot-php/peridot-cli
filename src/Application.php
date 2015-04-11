@@ -72,20 +72,24 @@ class Application extends ConsoleApplication
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-        $this->configuration = ConfigurationReader::readInput($input);
-        $this->environment->getEventEmitter()->emit('peridot.configure', [$this->configuration, $this]);
+        $command = $this->getPeridotCommand($output);
+        $this->add($command);
+        $exitCode = parent::doRun($input, $output);
+        $this->environment->getEventEmitter()->emit('peridot.end', [$exitCode, $input, $output]);
+        return $exitCode;
+    }
 
+    /**
+     * Get the Peridot command used to execute tests.
+     *
+     * @param OutputInterface $output
+     * @return Peridot\Cli\Command
+     */
+    public function getPeridotCommand($output)
+    {
         $runner = $this->getRunner();
         $factory = new ReporterFactory($output, $this->environment->getEventEmitter());
-
-        $this->loadDsl($this->configuration->getDsl());
-        $this->add(new Command($runner, $factory, $this->environment->getEventEmitter()));
-
-        $exitCode = parent::doRun($input, $output);
-
-        $this->environment->getEventEmitter()->emit('peridot.end', [$exitCode, $input, $output]);
-
-        return $exitCode;
+        return new Command($runner, $factory, $this->environment->getEventEmitter());
     }
 
     /**
