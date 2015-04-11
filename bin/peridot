@@ -1,0 +1,4 @@
+#!/usr/bin/env php
+<?php
+$application = include __DIR__ . '/../application.php';
+$application->run();

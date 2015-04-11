@@ -79,7 +79,7 @@ class Application extends ConsoleApplication
         $factory = new ReporterFactory($output, $this->environment->getEventEmitter());
 
         $this->loadDsl($this->configuration->getDsl());
-        $this->add(new Command($runner, $this->configuration, $factory, $this->environment->getEventEmitter()));
+        $this->add(new Command($runner, $factory, $this->environment->getEventEmitter()));
 
         $exitCode = parent::doRun($input, $output);
 

@@ -1,5 +1,5 @@
 <?php
-use Peridot\Console\InputDefinition;
+use Peridot\Cli\InputDefinition;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

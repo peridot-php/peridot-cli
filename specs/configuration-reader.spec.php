@@ -1,7 +1,7 @@
 <?php
 
-use Peridot\Console\ConfigurationReader;
-use Peridot\Console\InputDefinition;
+use Peridot\Cli\ConfigurationReader;
+use Peridot\Cli\InputDefinition;
 use Symfony\Component\Console\Input\ArrayInput;
 
 describe('ConfigurationReader', function() {

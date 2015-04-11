@@ -1,5 +1,5 @@
 <?php
-use Peridot\Console\CliOptionParser;
+use Peridot\Cli\CliOptionParser;
 
 describe('CliOptionParser', function() {
     beforeEach(function() {

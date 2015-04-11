@@ -1,7 +1,7 @@
 <?php
 use Evenement\EventEmitter;
-use Peridot\Console\Environment;
-use Peridot\Console\InputDefinition;
+use Peridot\Cli\Environment;
+use Peridot\Cli\InputDefinition;
 
 describe('Environment', function() {
     beforeEach(function() {

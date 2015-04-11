@@ -1,5 +1,5 @@
 <?php
-use Peridot\Console\Application;
+use Peridot\Cli\Application;
 use Peridot\Core\Suite;
 use Peridot\Core\Runner;
 use Peridot\Core\RunnerInterface;
