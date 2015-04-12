@@ -132,7 +132,7 @@ class Command extends ConsoleCommand
         }
 
         if ($reporter = $input->getOption('reporter')) {
-            
+
         }
 
         $this->eventEmitter->emit('peridot.load', [$this]);
@@ -140,7 +140,7 @@ class Command extends ConsoleCommand
         $reporter = $this->factory->create('spec');
         $reporter->setColorsEnabled(! $input->getOption('no-colors'));
 
-        return $this->getResult();
+        return $this->getResult($input->getArgument('path') ?: getcwd() . '/specs');
     }
 
     /**
@@ -162,10 +162,10 @@ class Command extends ConsoleCommand
      *
      * @return int
      */
-    protected function getResult()
+    protected function getResult($path)
     {
         $result = new TestResult($this->eventEmitter);
-        $this->getLoader()->load(getcwd() . '/specs');
+        $this->getLoader()->load($path);
         $this->runner->run($result);
 
         if ($result->getFailureCount() > 0) {
