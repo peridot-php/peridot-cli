@@ -13,4 +13,11 @@ describe('peridot --grep', function () {
         assert($process->isSuccessful());
         assert(preg_match('/1 passing/', $process->getOutput()));
     });
+
+    it('allows configuring a file pattern', function () {
+        $process = new Process($this->bin . " {$this->fixtures} --grep *.test.php");
+        $process->run();
+        assert($process->isSuccessful(), 'should be successful');
+        assert(preg_match('/should be false/', $process->getOutput()), 'should match *.test.php');
+    });
 });

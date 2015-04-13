@@ -75,7 +75,7 @@ class Command extends ConsoleCommand
     public function getLoader()
     {
         if ($this->loader === null) {
-            return new SuiteLoader('*.spec.php');
+            $this->loader = new SuiteLoader('*.spec.php');
         }
         return $this->loader;
     }
@@ -139,6 +139,9 @@ class Command extends ConsoleCommand
         $this->runner->setStopOnFailure($input->getOption('bail'));
         $reporter = $this->factory->create('spec');
         $reporter->setColorsEnabled(! $input->getOption('no-colors'));
+
+        $grep = $input->getOption('grep') ?: '*.spec.php';
+        $this->getLoader()->setPattern($grep);
 
         return $this->getResult($input->getArgument('path') ?: getcwd() . '/specs');
     }
