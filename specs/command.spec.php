@@ -106,6 +106,14 @@ describe('Command', function() {
             });
         });
 
+        context('when using the --grep option', function () {
+            it('sets the pattern used by the loader', function () {
+                $this->command->run(new ArrayInput(['--grep' => '*.test.php'], $this->definition), $this->output);
+                $pattern = $this->command->getLoader()->getPattern();
+                assert($pattern === '*.test.php');
+            });
+        });
+
         context('when using the --reporters option', function() {
             it('should list reporters', function() {
                 $this->command->run(new ArrayInput(['--reporters' => true], $this->definition), $this->output);
