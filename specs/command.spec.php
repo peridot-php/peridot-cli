@@ -4,7 +4,10 @@ use Peridot\Core\Suite;
 use Peridot\Core\Test;
 use Peridot\Core\Runner;
 use Peridot\Core\SuiteLoader;
+use Peridot\Reporter\SpecReporter;
 use Symfony\Component\Console\Input\ArrayInput;
+use Prophecy\Prophet;
+use Prophecy\Argument;
 
 describe('Command', function() {
 
@@ -71,6 +74,18 @@ describe('Command', function() {
         it('should set the runner stop on failure option', function () {
             $this->command->run(new ArrayInput(['--bail' => true], $this->definition), $this->output);
             assert($this->runner->shouldStopOnFailure() === true);
+        });
+
+        it('should set the reporter color option', function () {
+            $factory = (new Prophet())->prophesize('Peridot\Reporter\ReporterFactory');
+            $reporter = new SpecReporter($this->output, $this->emitter);
+            $factory->create(Argument::any())->willReturn($reporter);
+            $command = new Command($this->runner, $factory->reveal(), $this->emitter);
+            $command->setApplication($this->application);
+
+            $command->run(new ArrayInput(['--no-colors' => true]));
+
+            assert($reporter->areColorsEnabled() === false);
         });
 
         context('when using the --reporters option', function() {

@@ -29,6 +29,7 @@
     },
     "require-dev": {
         "peridot-php/peridot": "2.0.*@dev",
-        "symfony/process": "~2.6"
+        "symfony/process": "~2.6",
+        "phpspec/prophecy": "~1.4"
     }
 }
