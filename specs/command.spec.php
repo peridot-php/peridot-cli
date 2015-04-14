@@ -76,16 +76,34 @@ describe('Command', function() {
             assert($this->runner->shouldStopOnFailure() === true);
         });
 
-        it('should set the reporter color option', function () {
-            $factory = (new Prophet())->prophesize('Peridot\Reporter\ReporterFactory');
-            $reporter = new SpecReporter($this->output, $this->emitter);
-            $factory->create(Argument::any())->willReturn($reporter);
-            $command = new Command($this->runner, $factory->reveal(), $this->emitter);
-            $command->setApplication($this->application);
+        context('with configured output options', function () {
+            beforeEach(function () {
+                $this->prophet = new Prophet();
+                $this->factory = $this->prophet->prophesize('Peridot\Reporter\ReporterFactory');
+                $this->command = new Command($this->runner, $this->factory->reveal(), $this->emitter);
+                $this->command->setApplication($this->application);
+            });
 
-            $command->run(new ArrayInput(['--no-colors' => true]));
+            afterEach(function () {
+                $this->prophet->checkPredictions();
+            });
 
-            assert($reporter->areColorsEnabled() === false);
+            it('allows setting whether the reporter uses colors', function () {
+                $reporter = new SpecReporter($this->output, $this->emitter);
+                $this->factory->create(Argument::any())->willReturn($reporter);
+
+                $this->command->run(new ArrayInput(['--no-colors' => true]));
+
+                assert($reporter->areColorsEnabled() === false);
+            });
+
+            it('allows setting which reporter to use', function () {
+                $reporter = new SpecReporter($this->output, $this->emitter);
+
+                $this->factory->create('anon')->willReturn($reporter);
+
+                $this->command->run(new ArrayInput(['-r' => 'anon']));
+            });
         });
 
         context('when using the --reporters option', function() {
@@ -96,15 +114,6 @@ describe('Command', function() {
                 foreach ($reporters as $name => $info) {
                     assert(strstr($content, "$name - " . $info['description']) !== false,  "reporter $name should be displayed");
                 }
-            });
-        });
-
-        xcontext('when passing a reporter name', function() {
-            it('should set the reporter name on the configuration object', function() {
-                $this->factory->register('test', 'desc', function() {});
-                $this->command->run(new ArrayInput(['-r' => 'test'], $this->definition), $this->output);
-                $reporter = $this->configuration->getReporter();
-                assert($reporter == 'test', 'reporter name should be "test"');
             });
         });
 

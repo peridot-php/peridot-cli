@@ -131,13 +131,10 @@ class Command extends ConsoleCommand
             return 0;
         }
 
-        if ($reporter = $input->getOption('reporter')) {
-
-        }
-
+        $reporter = $input->getOption('reporter') ?: 'spec';
         $this->eventEmitter->emit('peridot.load', [$this]);
         $this->runner->setStopOnFailure($input->getOption('bail'));
-        $reporter = $this->factory->create('spec');
+        $reporter = $this->factory->create($reporter);
         $reporter->setColorsEnabled(! $input->getOption('no-colors'));
 
         $grep = $input->getOption('grep') ?: '*.spec.php';
