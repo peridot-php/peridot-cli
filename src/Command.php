@@ -114,6 +114,37 @@ class Command extends ConsoleCommand
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function run(InputInterface $input, OutputInterface $output)
+    {
+        $this->eventEmitter->emit('peridot.execute', [$input, $output]);
+        $this->eventEmitter->emit('peridot.reporters', [$input, $this->factory]);
+        return parent::run($input, $output);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Configures Peridot based on user input.
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->eventEmitter->emit('peridot.load', [$this]);
+        $this->runner->setStopOnFailure($input->getOption('bail'));
+
+        $reporter = $input->getOption('reporter') ?: 'spec';
+        $reporter = $this->factory->create($reporter);
+        $reporter->setColorsEnabled(! $input->getOption('no-colors'));
+
+        $grep = $input->getOption('grep') ?: '*.spec.php';
+        $this->getLoader()->setPattern($grep);
+    }
+
+    /**
      * Load and run Suites and Tests
      *
      * @param  InputInterface  $input
@@ -122,25 +153,13 @@ class Command extends ConsoleCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->eventEmitter->emit('peridot.execute', [$input, $output]);
-        $this->eventEmitter->emit('peridot.reporters', [$input, $this->factory]);
-
         if ($input->getOption('reporters')) {
             $this->listReporters($output);
-
             return 0;
         }
 
-        $reporter = $input->getOption('reporter') ?: 'spec';
-        $this->eventEmitter->emit('peridot.load', [$this]);
-        $this->runner->setStopOnFailure($input->getOption('bail'));
-        $reporter = $this->factory->create($reporter);
-        $reporter->setColorsEnabled(! $input->getOption('no-colors'));
-
-        $grep = $input->getOption('grep') ?: '*.spec.php';
-        $this->getLoader()->setPattern($grep);
-
-        return $this->getResult($input->getArgument('path') ?: getcwd() . '/specs');
+        $path = $input->getArgument('path') ?: getcwd() . '/specs';
+        return $this->getResult($path);
     }
 
     /**
