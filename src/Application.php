@@ -3,7 +3,6 @@ namespace Peridot\Cli;
 
 use Peridot\Configuration;
 use Peridot\Reporter\ReporterFactory;
-use Peridot\Core\Context;
 use Peridot\Core\Runner;
 use Peridot\Core\RunnerInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
@@ -87,9 +86,8 @@ class Application extends ConsoleApplication
      */
     public function getPeridotCommand($output)
     {
-        $runner = $this->getRunner();
         $factory = new ReporterFactory($output, $this->environment->getEventEmitter());
-        return new Command($runner, $factory, $this->environment->getEventEmitter());
+        return new Command($factory, $this->environment->getEventEmitter());
     }
 
     /**
@@ -134,35 +132,6 @@ class Application extends ConsoleApplication
     }
 
     /**
-     * Set the runner used by the Peridot application.
-     *
-     * @param RunnerInterface $runner
-     * @return $this
-     */
-    public function setRunner(RunnerInterface $runner)
-    {
-        $this->runner = $runner;
-        return $this;
-    }
-
-    /**
-     * Get the RunnerInterface being used by the Peridot application.
-     * If one is not set, a default Runner will be used.
-     *
-     * @return RunnerInterface
-     */
-    public function getRunner()
-    {
-        if ($this->runner === null) {
-            $this->runner = new Runner(
-                Context::getInstance()->getCurrentSuite(),
-                $this->environment->getEventEmitter()
-            );
-        }
-        return $this->runner;
-    }
-
-    /**
      * Return the Environment used by the Peridot application.
      *
      * @return Environment
@@ -170,28 +139,6 @@ class Application extends ConsoleApplication
     public function getEnvironment()
     {
         return $this->environment;
-    }
-
-    /**
-     * Return the configuration used by the Peridot application.
-     *
-     * @return Configuration
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
-    /**
-     * Set the configuration object used by the Peridot application.
-     *
-     * @param Configuration $configuration
-     * @return $this
-     */
-    public function setConfiguration(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-        return $this;
     }
 
     /**

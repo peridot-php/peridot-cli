@@ -6,9 +6,11 @@ use Peridot\Configuration;
 use Peridot\Core\HasEventEmitterTrait;
 use Peridot\Core\TestResult;
 use Peridot\Reporter\ReporterFactory;
+use Peridot\Core\Runner;
 use Peridot\Core\RunnerInterface;
 use Peridot\Core\SuiteLoader;
 use Peridot\Core\SuiteLoaderInterface;
+use Peridot\Core\Context;
 use Symfony\Component\Console\Command\Command as ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,7 +26,7 @@ class Command extends ConsoleCommand
     use HasEventEmitterTrait;
 
     /**
-     * @var \Peridot\Runner\RunnerInterface
+     * @var \Peridot\Core\RunnerInterface
      */
     protected $runner;
 
@@ -39,17 +41,14 @@ class Command extends ConsoleCommand
     protected $loader;
 
     /**
-     * @param RunnerInterface $runner
      * @param ReporterFactory $factory
      * @param EventEmitterInterface $eventEmitter
      */
     public function __construct(
-        RunnerInterface $runner,
         ReporterFactory $factory,
         EventEmitterInterface $eventEmitter
     ) {
         parent::__construct('peridot');
-        $this->runner = $runner;
         $this->factory = $factory;
         $this->eventEmitter = $eventEmitter;
     }
@@ -93,13 +92,19 @@ class Command extends ConsoleCommand
     }
 
     /**
-     * Return the runner used by the Peridot command. Defaults to
-     * an instance of Peridot\Core\Runner.
+     * Get the RunnerInterface being used by the Peridot command.
+     * If one is not set, a default Runner will be used.
      *
      * @return RunnerInterface
      */
     public function getRunner()
     {
+        if ($this->runner === null) {
+            $this->runner = new Runner(
+                Context::getInstance()->getCurrentSuite(),
+                $this->getEventEmitter()
+            );
+        }
         return $this->runner;
     }
 
@@ -134,7 +139,7 @@ class Command extends ConsoleCommand
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->eventEmitter->emit('peridot.load', [$this]);
-        $this->runner->setStopOnFailure($input->getOption('bail'));
+        $this->getRunner()->setStopOnFailure($input->getOption('bail'));
 
         $reporter = $input->getOption('reporter') ?: 'spec';
         $reporter = $this->factory->create($reporter);
@@ -185,7 +190,7 @@ class Command extends ConsoleCommand
     {
         $result = new TestResult($this->eventEmitter);
         $this->getLoader()->load($path);
-        $this->runner->run($result);
+        $this->getRunner()->run($result);
 
         if ($result->getFailureCount() > 0) {
             return 1;

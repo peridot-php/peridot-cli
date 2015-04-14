@@ -52,22 +52,4 @@ describe('Application', function() {
             assert($env === $this->environment);
         });
     });
-
-    describe('runner accessors', function() {
-        beforeEach(function() {
-            $this->runner = new Runner(new Suite('desc', function() {}), $this->environment->getEventEmitter());
-        });
-
-        it('should allow access to runner', function() {
-            $this->application->setRunner($this->runner);
-            assert($this->application->getRunner() === $this->runner);
-        });
-
-        context('when getting Runner', function() {
-            it('should return a default runner if none set', function() {
-                $runner = $this->application->getRunner();
-                assert($runner instanceof RunnerInterface);
-            });
-        });
-    });
 });

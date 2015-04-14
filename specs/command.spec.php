@@ -3,6 +3,7 @@ use Peridot\Cli\Command;
 use Peridot\Core\Suite;
 use Peridot\Core\Test;
 use Peridot\Core\Runner;
+use Peridot\Core\RunnerInterface;
 use Peridot\Core\SuiteLoader;
 use Peridot\Reporter\SpecReporter;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -27,11 +28,20 @@ describe('Command', function() {
     });
 
     describe('runner accessors', function() {
-        it('should allow setting and getting of the runner', function () {
-            $suite = new Suite('description', function () {});
-            $runner = new Runner($suite, $this->emitter);
-            $this->command->setRunner($runner);
-            assert($runner === $this->command->getRunner(), 'runner should be accessible from command');
+        beforeEach(function() {
+            $this->runner = new Runner(new Suite('desc', function() {}), $this->environment->getEventEmitter());
+        });
+
+        it('should allow access to runner', function() {
+            $this->command->setRunner($this->runner);
+            assert($this->command->getRunner() === $this->runner);
+        });
+
+        context('when getting Runner', function() {
+            it('should return a default runner if none set', function() {
+                $runner = $this->command->getRunner();
+                assert($runner instanceof RunnerInterface);
+            });
         });
     });
 
@@ -82,7 +92,8 @@ describe('Command', function() {
          */
         $withMockFactory = function () {
             $this->factory = $this->prophet->prophesize('Peridot\Reporter\ReporterFactory');
-            $this->command = new Command($this->runner, $this->factory->reveal(), $this->emitter);
+            $this->command = new Command($this->factory->reveal(), $this->emitter);
+            $this->command->setRunner($this->runner);
             $this->command->setApplication($this->application);
         };
 
@@ -149,7 +160,8 @@ describe('Command', function() {
                 $test = new Test('fail', function() { throw new Exception('fail'); });
                 $suite->addTest($test);
                 $runner = new Runner($suite, $this->emitter);
-                $command = new Command($runner, $this->factory, $this->emitter);
+                $command = new Command($this->factory, $this->emitter);
+                $command->setRunner($runner);
                 $command->setApplication($this->application);
                 $exit = $command->run(new ArrayInput([], $this->definition), $this->output);
 
