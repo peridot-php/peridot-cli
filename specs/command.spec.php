@@ -12,6 +12,7 @@ use Prophecy\Argument;
 describe('Command', function() {
 
     include __DIR__ . '/shared/application-tester.php';
+    $this->prophet = new Prophet();
 
     describe('loader accessors', function() {
         it('should allow setting and getting of loader', function() {
@@ -76,17 +77,18 @@ describe('Command', function() {
             assert($this->runner->shouldStopOnFailure() === true);
         });
 
-        context('with configured output options', function () {
-            beforeEach(function () {
-                $this->prophet = new Prophet();
-                $this->factory = $this->prophet->prophesize('Peridot\Reporter\ReporterFactory');
-                $this->command = new Command($this->runner, $this->factory->reveal(), $this->emitter);
-                $this->command->setApplication($this->application);
-            });
+        /**
+         * Create a Command with a mocked reporter factory.
+         */
+        $withMockFactory = function () {
+            $this->factory = $this->prophet->prophesize('Peridot\Reporter\ReporterFactory');
+            $this->command = new Command($this->runner, $this->factory->reveal(), $this->emitter);
+            $this->command->setApplication($this->application);
+        };
 
-            afterEach(function () {
-                $this->prophet->checkPredictions();
-            });
+        context('when using the --no-colors option', function () use ($withMockFactory) {
+            beforeEach($withMockFactory);
+            afterEach([$this->prophet, 'checkPredictions']);
 
             it('allows setting whether the reporter uses colors', function () {
                 $reporter = new SpecReporter($this->output, $this->emitter);
@@ -96,6 +98,11 @@ describe('Command', function() {
 
                 assert($reporter->areColorsEnabled() === false);
             });
+        });
+
+        context('when using the -r option', function () use ($withMockFactory) {
+            beforeEach($withMockFactory);
+            afterEach([$this->prophet, 'checkPredictions']);
 
             it('allows setting which reporter to use', function () {
                 $reporter = new SpecReporter($this->output, $this->emitter);
