@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Evenement\EventEmitter;
 
 /**
  * The main Peridot application class.
@@ -139,6 +140,23 @@ class Application extends ConsoleApplication
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * Factory method to create a new Application
+     *
+     * @param array $args
+     * @return Application
+     */
+    public static function create($args)
+    {
+        $parser = new CliOptionParser(['-c', '--configuration'], $args);
+        $environment = new Environment(
+            new InputDefinition(),
+            new EventEmitter(),
+            $parser->parse()
+        );
+        return new Application($environment);
     }
 
     /**
