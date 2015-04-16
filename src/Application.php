@@ -36,13 +36,15 @@ class Application extends ConsoleApplication
 
     /**
      * @param Environment $environment
+     * @param string $name
+     * @param string $version
      */
-    public function __construct(Environment $environment)
+    public function __construct(Environment $environment, $name, $version)
     {
         $this->environment = $environment;
         $this->validateConfiguration();
         $this->environment->getEventEmitter()->emit('peridot.start', [$this->environment, $this]);
-        parent::__construct('Peridot', '2.0.*@dev');
+        parent::__construct($name, $version);
     }
 
     /**
@@ -145,10 +147,12 @@ class Application extends ConsoleApplication
     /**
      * Factory method to create a new Application
      *
+     * @param string $name
+     * @param string $version
      * @param array $args
      * @return Application
      */
-    public static function create($args)
+    public static function create($name, $version, $args)
     {
         $parser = new CliOptionParser(['-c', '--configuration'], $args);
         $environment = new Environment(
@@ -156,7 +160,7 @@ class Application extends ConsoleApplication
             new EventEmitter(),
             $parser->parse()
         );
-        return new Application($environment);
+        return new Application($environment, $name, $version);
     }
 
     /**

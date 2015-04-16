@@ -15,7 +15,7 @@ describe('Application', function() {
                 $ref = $r;
                 $environment = $env;
             });
-            $application = new Application($this->environment);
+            $application = new Application($this->environment, 'Peridot', 'dev');
             assert($ref === $application, "application reference should be emitted");
             assert($environment === $this->environment, "environment reference should be emitted");
         });
