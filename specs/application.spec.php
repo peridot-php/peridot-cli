@@ -3,6 +3,7 @@ use Peridot\Cli\Application;
 use Peridot\Core\Suite;
 use Peridot\Core\Runner;
 use Peridot\Core\RunnerInterface;
+use Symfony\Component\Console\Input\ArrayInput;
 
 describe('Application', function() {
     include __DIR__ . '/shared/application-tester.php';
@@ -23,7 +24,8 @@ describe('Application', function() {
 
     describe('->getCommandName()', function() {
         it('should return "peridot"', function() {
-            assert($this->application->getCommandName() == "peridot", "command name should be peridot");
+            $input = new ArrayInput([]);
+            assert($this->application->getCommandName($input) == "peridot", "command name should be peridot");
         });
     });
 
