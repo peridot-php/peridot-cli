@@ -105,7 +105,7 @@ describe('Command', function() {
                 $reporter = new SpecReporter($this->output, $this->emitter);
                 $this->factory->create(Argument::any())->willReturn($reporter);
 
-                $this->command->run(new ArrayInput(['--no-colors' => true]));
+                $this->command->run(new ArrayInput(['--no-colors' => true]), $this->output);
 
                 assert($reporter->areColorsEnabled() === false);
             });
@@ -120,7 +120,7 @@ describe('Command', function() {
 
                 $this->factory->create('anon')->willReturn($reporter);
 
-                $this->command->run(new ArrayInput(['-r' => 'anon']));
+                $this->command->run(new ArrayInput(['-r' => 'anon']), $this->output);
             });
         });
 
