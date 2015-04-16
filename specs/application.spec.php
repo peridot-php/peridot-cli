@@ -21,18 +21,6 @@ describe('Application', function() {
         });
     });
 
-    describe('->loadDsl()', function() {
-        it('should include a file if it exists', function() {
-            $this->application->loadDsl(__DIR__ . '/../fixtures/rad.dsl.php');
-            assert(function_exists('peridotRadDescribe'), 'dsl should have been included');
-        });
-
-        it('should not include the same dsl twice', function() {
-            $this->application->loadDsl(__DIR__ . '/../fixtures/rad.dsl2.php');
-            $this->application->loadDsl(__DIR__ . '/../fixtures/rad.dsl2.php');
-        });
-    });
-
     describe('->getCommandName()', function() {
         it('should return "peridot"', function() {
             assert($this->application->getCommandName() == "peridot", "command name should be peridot");

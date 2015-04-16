@@ -123,18 +123,6 @@ class Application extends ConsoleApplication
     }
 
     /**
-     * Load the configured DSL.
-     *
-     * @param $dsl
-     */
-    public function loadDsl($dslPath)
-    {
-        if (file_exists($dslPath)) {
-            include_once $dslPath;
-        }
-    }
-
-    /**
      * Return the Environment used by the Peridot application.
      *
      * @return Environment
