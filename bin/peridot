@@ -31,5 +31,4 @@ require_once PERIDOT_COMPOSER_INSTALL;
 use Peridot\Cli\Application;
 
 $application = Application::create('Peridot', 'dev', $argv);
-$application->loadDsl(__DIR__ . '/../vendor/peridot-php/peridot/src/Dsl.php');
 $application->run();

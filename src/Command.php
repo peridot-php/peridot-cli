@@ -113,7 +113,7 @@ class Command extends ConsoleCommand
      *
      * @return string
      */
-    public function getSynopsis()
+    public function getSynopsis($short = false)
     {
         return $this->getName() . ' [options] [files]';
     }

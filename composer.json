@@ -19,6 +19,7 @@
     },
     "require": {
       "peridot-php/peridot-core": "2.0.*@dev",
+      "peridot-php/peridot-dsls": "2.0.*@dev",
       "peridot-php/peridot-reporters": "2.0.*@dev",
       "symfony/console": "~2.0"
     },
