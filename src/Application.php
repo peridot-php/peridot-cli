@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Evenement\EventEmitter;
+use Peridot\EventEmitter;
 
 /**
  * The main Peridot application class.

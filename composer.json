@@ -32,5 +32,7 @@
         "peridot-php/peridot": "2.0.*@dev",
         "symfony/process": "~2.6",
         "phpspec/prophecy": "~1.4"
-    }
+    },
+    "minimum-stability":"dev",
+    "prefer-stable": true
 }
