@@ -123,8 +123,8 @@ class Command extends ConsoleCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        $this->eventEmitter->emit('peridot.execute', [$input, $output]);
-        $this->eventEmitter->emit('peridot.reporters', [$input, $this->factory]);
+        $this->eventEmitter->emit('peridot.execute', $input, $output);
+        $this->eventEmitter->emit('peridot.reporters', $input, $this->factory);
         return parent::run($input, $output);
     }
 
@@ -138,7 +138,7 @@ class Command extends ConsoleCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->eventEmitter->emit('peridot.load', [$this]);
+        $this->eventEmitter->emit('peridot.load', $this);
         $this->getRunner()->setStopOnFailure($input->getOption('bail'));
 
         $reporter = $input->getOption('reporter') ?: 'spec';

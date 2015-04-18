@@ -43,7 +43,7 @@ class Application extends ConsoleApplication
     {
         $this->environment = $environment;
         $this->validateConfiguration();
-        $this->environment->getEventEmitter()->emit('peridot.start', [$this->environment, $this]);
+        $this->environment->getEventEmitter()->emit('peridot.start', $this->environment, $this);
         parent::__construct($name, $version);
     }
 
@@ -77,7 +77,7 @@ class Application extends ConsoleApplication
         $command = $this->getPeridotCommand($output);
         $this->add($command);
         $exitCode = parent::doRun($input, $output);
-        $this->environment->getEventEmitter()->emit('peridot.end', [$exitCode, $input, $output]);
+        $this->environment->getEventEmitter()->emit('peridot.end', $exitCode, $input, $output);
         return $exitCode;
     }
 

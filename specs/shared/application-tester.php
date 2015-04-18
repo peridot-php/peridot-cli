@@ -1,5 +1,5 @@
 <?php
-use Evenement\EventEmitter;
+use Peridot\EventEmitter;
 use Peridot\Configuration;
 use Peridot\Cli\Application;
 use Peridot\Cli\Command;
