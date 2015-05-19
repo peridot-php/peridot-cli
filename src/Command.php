@@ -81,7 +81,7 @@ class Command extends ConsoleCommand
     public function getLoader()
     {
         if ($this->loader === null) {
-            $this->loader = new SuiteLoader('*.spec.php');
+            $this->loader = new SuiteLoader('*.spec.php', $this->context);
         }
         return $this->loader;
     }
