@@ -7,7 +7,7 @@ use Peridot\Core\Context;
 
 /**
  * Environment is responsible for creating necessary objects and conditions
- * for Peridot to run. It creates the event emitter, input definition, and includes
+ * for Peridot to run. It creates the event emitter, input definition, context, and includes
  * user configuration from the Peridot configuration file.
  *
  * @package Peridot\Cli
@@ -27,6 +27,11 @@ class Environment
      * @var array
      */
     protected $options;
+
+    /**
+     * @var \Peridot\Core\Context
+     */
+    protected $context;
 
     /**
      * @param InputDefinition $definition
@@ -66,6 +71,16 @@ class Environment
     public function getDefinition()
     {
         return $this->definition;
+    }
+
+    /**
+     * Return the Context used for building test hierarchies
+     *
+     * @return \Peridot\Core\Context
+     */
+    public function getContext()
+    {
+        return $this->context;
     }
 
     /**
@@ -140,6 +155,7 @@ class Environment
      */
     protected function initializeContext(EventEmitterInterface $emitter)
     {
-        Context::getInstance()->setEventEmitter($emitter);
+        $this->context = Context::getInstance();
+        $this->context->setEventEmitter($emitter);
     }
 }
