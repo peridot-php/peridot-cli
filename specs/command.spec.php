@@ -6,6 +6,7 @@ use Peridot\Core\Runner;
 use Peridot\Core\RunnerInterface;
 use Peridot\Core\SuiteLoader;
 use Peridot\Reporter\SpecReporter;
+use Peridot\Core\Context;
 use Symfony\Component\Console\Input\ArrayInput;
 use Prophecy\Prophet;
 use Prophecy\Argument;
@@ -17,7 +18,7 @@ describe('Command', function() {
 
     describe('loader accessors', function() {
         it('should allow setting and getting of loader', function() {
-            $loader = new SuiteLoader('*.stub.php');
+            $loader = new SuiteLoader('*.stub.php', $this->context);
             $this->command->setLoader($loader);
             assert($loader === $this->command->getLoader(), 'loader should be accessible from command');
         });
@@ -92,7 +93,7 @@ describe('Command', function() {
          */
         $withMockFactory = function () {
             $this->factory = $this->prophet->prophesize('Peridot\Reporter\ReporterFactory');
-            $this->command = new Command($this->factory->reveal(), $this->emitter);
+            $this->command = new Command($this->factory->reveal(), $this->emitter, $this->context);
             $this->command->setRunner($this->runner);
             $this->command->setApplication($this->application);
         };
@@ -102,7 +103,7 @@ describe('Command', function() {
             afterEach([$this->prophet, 'checkPredictions']);
 
             it('allows setting whether the reporter uses colors', function () {
-                $reporter = new SpecReporter($this->output, $this->emitter);
+                $reporter = new SpecReporter($this->output, $this->emitter, $this->context);
                 $this->factory->create(Argument::any())->willReturn($reporter);
 
                 $this->command->run(new ArrayInput(['--no-colors' => true]), $this->output);
@@ -116,7 +117,7 @@ describe('Command', function() {
             afterEach([$this->prophet, 'checkPredictions']);
 
             it('allows setting which reporter to use', function () {
-                $reporter = new SpecReporter($this->output, $this->emitter);
+                $reporter = new SpecReporter($this->output, $this->emitter, $this->context);
 
                 $this->factory->create('anon')->willReturn($reporter);
 
@@ -160,7 +161,7 @@ describe('Command', function() {
                 $test = new Test('fail', function() { throw new Exception('fail'); });
                 $suite->addTest($test);
                 $runner = new Runner($suite, $this->emitter);
-                $command = new Command($this->factory, $this->emitter);
+                $command = new Command($this->factory, $this->emitter, $this->context);
                 $command->setRunner($runner);
                 $command->setApplication($this->application);
                 $exit = $command->run(new ArrayInput([], $this->definition), $this->output);

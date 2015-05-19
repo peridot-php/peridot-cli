@@ -89,8 +89,10 @@ class Application extends ConsoleApplication
      */
     public function getPeridotCommand($output)
     {
-        $factory = new ReporterFactory($output, $this->environment->getEventEmitter());
-        return new Command($factory, $this->environment->getEventEmitter());
+        $emitter = $this->environment->getEventEmitter();
+        $context = $this->environment->getContext();
+        $factory = new ReporterFactory($output, $emitter, $context);
+        return new Command($factory, $emitter, $context);
     }
 
     /**

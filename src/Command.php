@@ -36,6 +36,11 @@ class Command extends ConsoleCommand
     protected $factory;
 
     /**
+     * @var \Peridot\Core\Context
+     */
+    protected $context;
+
+    /**
      * @var \Peridot\Core\SuiteLoaderInterface
      */
     protected $loader;
@@ -46,11 +51,13 @@ class Command extends ConsoleCommand
      */
     public function __construct(
         ReporterFactory $factory,
-        EventEmitterInterface $eventEmitter
+        EventEmitterInterface $eventEmitter,
+        Context $context
     ) {
         parent::__construct('peridot');
         $this->factory = $factory;
         $this->eventEmitter = $eventEmitter;
+        $this->context = $context;
     }
 
     /**
@@ -74,7 +81,7 @@ class Command extends ConsoleCommand
     public function getLoader()
     {
         if ($this->loader === null) {
-            $this->loader = new SuiteLoader('*.spec.php');
+            $this->loader = new SuiteLoader('*.spec.php', $this->context);
         }
         return $this->loader;
     }
@@ -101,7 +108,7 @@ class Command extends ConsoleCommand
     {
         if ($this->runner === null) {
             $this->runner = new Runner(
-                Context::getInstance()->getCurrentSuite(),
+                $this->context->getCurrentSuite(),
                 $this->getEventEmitter()
             );
         }
